@@ -1,0 +1,24 @@
+{
+    "extends": "astro/tsconfigs/base",
+    "include": ["./src/**/*"],
+    "exclude": ["./node_modules*"],
+    "compilerOptions": {
+        "baseUrl": ".",
+        "target": "ES2019",
+        "strict": true,
+        "moduleResolution": "node",
+        "verbatimModuleSyntax": true,
+        "preserveValueImports": false,
+        "rootDir": "src",
+        "paths": {
+            "@/*": ["src/*"]
+        },
+        "plugins": [
+            {
+                "name": "@astrojs/ts-plugin"
+            }
+        ],
+        "jsx": "preserve",
+        "jsxImportSource": "solid-js"
+    }
+}
