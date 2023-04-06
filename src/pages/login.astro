@@ -1,0 +1,14 @@
+---
+import LoginForm from "@/components/LoginForm"
+import Container from "@/layouts/Container.astro"
+
+export const prerender = true
+---
+
+<Container>
+    <main class="mx-auto max-w-md">
+        <h1>Entre na sua conta</h1>
+
+        <LoginForm client:load />
+    </main>
+</Container>
