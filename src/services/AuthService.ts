@@ -1,5 +1,9 @@
 import type { Client, SessionService } from "./SessionService"
 
+/**
+ * A service that manages authentication. It is responsible for logging in, logging out, and signing
+ * up users.
+ */
 export class AuthService {
     private client: Client
 
@@ -8,6 +12,14 @@ export class AuthService {
         this.client = session.client
     }
 
+    /**
+     * Logs in a user in. If the login is successful, the user's session will be stored in the
+     * session service.
+     *
+     * @param email The user's email.
+     * @param password The user's password.
+     * @returns The generated tokens, or `null` if the login failed.
+     */
     async login(email: string, password: string) {
         const { data, error } = await this.client.auth.signInWithPassword({ email, password })
 
@@ -18,7 +30,6 @@ export class AuthService {
         return {
             access_token: data.session.access_token,
             refresh_token: data.session.access_token,
-            user_id: data.user.id,
         }
     }
 }

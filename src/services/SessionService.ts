@@ -17,6 +17,10 @@ const supabaseAnonKey = import.meta.env.SUPABASE_ANON_KEY
 
 export type Client = SupabaseClient<Database>
 
+/**
+ * A service that manages the user's session. It is responsible for storing and retrieving the
+ * session from the client.
+ */
 export class SessionService {
     private constructor(readonly client: Client, private cookies: AstroCookies) {
         client.auth.onAuthStateChange((_, session) => {
@@ -30,6 +34,12 @@ export class SessionService {
         })
     }
 
+    /**
+     * Creates a new session service from Astro cookies.
+     *
+     * @param cookies The cookies to use.
+     * @returns The session service.
+     */
     static async fromCookies(cookies: AstroCookies) {
         const client = createClient(supabaseUrl, supabaseAnonKey)
 
