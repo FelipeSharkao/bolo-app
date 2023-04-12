@@ -8,7 +8,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "gen:supabase": "supabase gen types typescript --project-id $(npx dotenv -p SUPABASE_ID) > src/types/supabase.ts"
+    "gen:supabase": "supabase gen types typescript --project-id $(npx dotenv -p SUPABASE_ID) > src/types/_generated/supabase.ts"
   },
   "dependencies": {
     "@astrojs/solid-js": "^2.1.0",

@@ -1,0 +1,17 @@
+---
+import Root from "./Root.astro"
+
+const url = Astro.url.pathname
+---
+
+<Root>
+    <main class="container md:grid md:grid md:grid-cols-12 md:gap-x-10">
+        <aside class="md:col-span-4 lg:col-span-3">
+            <nav>
+            </nav>
+        </aside>
+        <div role="document" class="md:col-span-8 lg:col-span-9">
+            <slot />
+        </div>
+    </main>
+</Root>

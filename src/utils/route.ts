@@ -73,9 +73,7 @@ export const route: RouteFn = (handler) => {
 
 route.auth = (handler) => {
     return route(async (request) => {
-        const { data } = await request.session.client.auth.getSession()
-
-        if (!data.session) {
+        if (!request.session.current) {
             return { status: 401 }
         }
 

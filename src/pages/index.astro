@@ -1,7 +1,13 @@
 ---
-import Root from "@/layouts/Root.astro"
+import App from "@/layouts/App.astro"
+import { auth } from "@/utils/auth"
+
+const login = await auth(Astro)
+if (login.redirect) {
+    return login.redirect
+}
 ---
 
-<Root>
+<App>
     <h1>Hello Astro</h1>
-</Root>
+</App>

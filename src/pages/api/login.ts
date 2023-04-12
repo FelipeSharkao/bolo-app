@@ -10,7 +10,7 @@ export const post = route(async ({ body, session }) => {
     const login = await authService.login(email, password)
 
     if (!login) {
-        return { status: 401 }
+        return { status: 400, body: { success: false, error: "Invalid credentials" } }
     }
 
     return { body: { success: true, ...login } }

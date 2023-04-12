@@ -1,14 +1,12 @@
 ---
 import LoginForm from "@/components/LoginForm"
-import Container from "@/layouts/Container.astro"
+import Centered from "@/layouts/Centered.astro"
 
 export const prerender = true
 ---
 
-<Container>
-    <main class="mx-auto max-w-md">
-        <h1>Entre na sua conta</h1>
+<Centered>
+    <h1>Entre na sua conta</h1>
 
-        <LoginForm client:load />
-    </main>
-</Container>
+    <LoginForm client:load />
+</Centered>
