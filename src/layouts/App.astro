@@ -8,6 +8,12 @@ const url = Astro.url.pathname
     <main class="container md:grid md:grid md:grid-cols-12 md:gap-x-10">
         <aside class="md:col-span-4 lg:col-span-3">
             <nav>
+                <details open={url.startsWith("/m/")}>
+                    <summary>Cardápios</summary>
+                    <ul>
+                        <li><a href="/m/new">Novo</a></li>
+                    </ul>
+                </details>
             </nav>
         </aside>
         <div role="document" class="md:col-span-8 lg:col-span-9">

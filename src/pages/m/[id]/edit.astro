@@ -1,0 +1,21 @@
+---
+import MenuForm from "@/components/menus"
+import App from "@/layouts/App.astro"
+import { auth } from "@/utils/auth"
+
+const login = await auth(Astro)
+if (login.redirect) {
+    return login.redirect
+}
+
+const { id } = Astro.params
+---
+
+<App>
+    <hgroup>
+        <h1>Novo cardápio</h1>
+        <h2>Adicione um novo cardápio</h2>
+    </hgroup>
+
+    <MenuForm client:load menuId={id} />
+</App>
