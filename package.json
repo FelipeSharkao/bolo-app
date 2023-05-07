@@ -11,31 +11,33 @@
     "gen:supabase": "supabase gen types typescript --project-id $(npx dotenv -p SUPABASE_ID) > src/types/_generated/supabase.ts"
   },
   "dependencies": {
-    "@astrojs/solid-js": "^2.1.0",
-    "@astrojs/tailwind": "^3.1.1",
-    "@astrojs/ts-plugin": "^0.4.4",
-    "@picocss/pico": "^1.5.7",
-    "@supabase/supabase-js": "^2.14.0",
-    "astro": "^2.2.3",
-    "axios": "^1.3.5",
-    "solid-js": "^1.4.3",
-    "solid-sm": "^1.0.1",
-    "tailwindcss": "^3.0.24"
+    "@astrojs/solid-js": "^2.1.1",
+    "@astrojs/tailwind": "^3.1.2",
+    "@astrojs/ts-plugin": "^0.4.5",
+    "@picocss/pico": "^1.5.10",
+    "@supabase/supabase-js": "^2.21.0",
+    "astro": "^2.4.2",
+    "axios": "^1.4.0",
+    "sass": "^1.62.1",
+    "solid-js": "^1.7.5",
+    "solid-sm": "^1.1.0",
+    "tailwindcss": "^3.3.2"
   },
   "devDependencies": {
-    "@babel/core": "^7.21.4",
+    "@babel/core": "^7.21.8",
+    "@total-typescript/ts-reset": "^0.4.2",
     "@trivago/prettier-plugin-sort-imports": "^4.1.1",
-    "@typescript-eslint/eslint-plugin": "^5.57.1",
-    "@typescript-eslint/parser": "^5.57.1",
+    "@typescript-eslint/eslint-plugin": "^5.59.2",
+    "@typescript-eslint/parser": "^5.59.2",
     "dotenv-cli": "^7.2.1",
-    "eslint": "^8.37.0",
+    "eslint": "^8.40.0",
     "eslint-plugin-ie11": "^1.0.0",
-    "eslint-plugin-solid": "^0.12.0",
-    "prettier": "^2.8.7",
+    "eslint-plugin-solid": "^0.12.1",
+    "prettier": "^2.8.8",
     "prettier-plugin-astro": "^0.8.0",
-    "prettier-plugin-tailwindcss": "^0.2.7",
-    "supabase": "^1.49.4",
+    "prettier-plugin-tailwindcss": "^0.2.8",
+    "supabase": "^1.55.1",
     "ts-toolbelt": "^9.6.0",
-    "typescript": "^5.0.3"
+    "typescript": "^5.0.4"
   }
 }

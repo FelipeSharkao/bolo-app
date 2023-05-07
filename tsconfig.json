@@ -6,7 +6,6 @@
         "baseUrl": ".",
         "target": "ES2019",
         "strict": true,
-        "moduleResolution": "node",
         "verbatimModuleSyntax": true,
         "preserveValueImports": false,
         "rootDir": "src",

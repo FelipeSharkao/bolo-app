@@ -9,7 +9,7 @@ export default defineConfig({
     integrations: [solidJs(), tailwind()],
     vite: {
         ssr: {
-            noExternal: ["ts-toolbelt", "@picocss/pico"],
+            noExternal: ["ts-toolbelt", "@total-typescript/ts-reset", "@picocss/pico"],
         },
     },
 })

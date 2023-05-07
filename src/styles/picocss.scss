@@ -1,0 +1,15 @@
+$enable-responsive-spacings: false;
+
+@import "@picocss/pico/scss/pico";
+
+// Input group
+fieldset {
+    input:not([type="checkbox"], [type="radio"]),
+    select,
+    textarea {
+        // Remove margin from last input in group
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+}
