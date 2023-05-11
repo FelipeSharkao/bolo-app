@@ -1,7 +1,8 @@
 import { For, Show } from "solid-js"
+
 import type { EditingMenuEntryState, EditingMenuItemState, EditingMenuSectionState } from "../state"
-import MenuSectionForm from "./MenuSectionForm"
 import MenuItemForm from "./MenuItemForm"
+import MenuSectionForm from "./MenuSectionForm"
 
 type Props = {
     entries: EditingMenuEntryState[]

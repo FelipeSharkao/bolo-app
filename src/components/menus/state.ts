@@ -1,5 +1,6 @@
 import { state } from "solid-sm"
 import type { Object } from "ts-toolbelt"
+
 import type { Menu, MenuItem, MenuSection } from "@/types/menu"
 
 export type EditingMenuState = Object.Merge<

@@ -4,12 +4,12 @@ module.exports = {
     trailingComma: "all",
     singleQuote: false,
     semi: false,
-    plugins: [
-        require("prettier-plugin-astro"),
-        require("@trivago/prettier-plugin-sort-imports"),
-        require("prettier-plugin-tailwindcss"),
-    ],
-    importOrder: ["<THIRD_PARTY_MODULES>", "^@", ".*"],
+    importOrder: ["^@/", "^\\."],
     importOrderSeparation: true,
     importOrderSortSpecifiers: true,
+    plugins: [
+        "prettier-plugin-astro",
+        "@trivago/prettier-plugin-sort-imports",
+        "prettier-plugin-tailwindcss",
+    ],
 }

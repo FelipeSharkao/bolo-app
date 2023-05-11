@@ -1,3 +1,5 @@
+import Input from "@/components/Input"
+
 import { editingMenu } from "../state"
 import MenuEntryFormList from "./MenuEntryFormList"
 
@@ -14,20 +16,21 @@ export default function MenuForm(props: Props) {
 
     return (
         <>
-            <fieldset>
-                <label for="title">Título</label>
-                <input
+            <Input.Group>
+                <Input.Label for="title">Título</Input.Label>
+                <Input
                     type="text"
                     id="title"
                     value={editingMenu.title}
-                    onChange={(ev) => editingMenu.setTitle(ev.currentTarget.value)}
+                    onChange={(value) => editingMenu.setTitle(value)}
                 />
-                <textarea
+                <Input
+                    type="textarea"
                     id="description"
                     value={editingMenu.description || ""}
-                    onChange={(ev) => editingMenu.setDescription(ev.currentTarget.value || null)}
+                    onChange={(value) => editingMenu.setDescription(value || null)}
                 />
-            </fieldset>
+            </Input.Group>
 
             <MenuEntryFormList
                 allowItem={false}

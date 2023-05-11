@@ -1,3 +1,9 @@
+import { useActions } from "solid-sm"
+
+import Card from "@/components/Card"
+import Input from "@/components/Input"
+import NumberInput from "@/components/NumberInput"
+
 import type { EditingMenuItemState } from "../state"
 
 type Props = {
@@ -5,52 +11,42 @@ type Props = {
 }
 
 export default function MenuItemForm(props: Props) {
+    const [setTitle, setDescription, setMin, setMax, setPrice] = useActions(
+        () => props.value,
+        "setTitle",
+        "setDescription",
+        "setMin",
+        "setMax",
+        "setPrice",
+    )
+
     return (
-        <article>
-            <fieldset>
-                <label for="title">Título</label>
-                <input
-                    type="text"
-                    id="title"
-                    value={props.value.title}
-                    onChange={(ev) => props.value.setTitle(ev.currentTarget.value)}
-                />
-                <textarea
+        <Card>
+            <Input.Group>
+                <Input.Label for="title">Título</Input.Label>
+                <Input type="text" id="title" value={props.value.title} onChange={setTitle} />
+                <Input
+                    type="textarea"
                     id="description"
                     value={props.value.description || ""}
-                    onChange={(ev) => props.value.setDescription(ev.currentTarget.value || null)}
+                    onChange={setDescription}
                 />
-            </fieldset>
+            </Input.Group>
 
-            <fieldset>
-                <label for="min">Mínimo</label>
-                <input
-                    type="number"
-                    id="min"
-                    value={props.value.min || ""}
-                    onChange={(ev) => props.value.setMin(ev.currentTarget.valueAsNumber ?? null)}
-                />
-            </fieldset>
+            <Input.Group>
+                <Input.Label for="min">Mínimo</Input.Label>
+                <NumberInput id="min" nullable value={props.value.min || ""} onChange={setMin} />
+            </Input.Group>
 
-            <fieldset>
-                <label for="max">Máximo</label>
-                <input
-                    type="number"
-                    id="max"
-                    value={props.value.max || ""}
-                    onChange={(ev) => props.value.setMax(ev.currentTarget.valueAsNumber ?? null)}
-                />
-            </fieldset>
+            <Input.Group>
+                <Input.Label for="max">Máximo</Input.Label>
+                <NumberInput id="max" nullable value={props.value.max || ""} onChange={setMax} />
+            </Input.Group>
 
-            <fieldset>
-                <label for="price">Price</label>
-                <input
-                    type="number"
-                    id="price"
-                    value={props.value.price || ""}
-                    onChange={(ev) => props.value.setPrice(ev.currentTarget.valueAsNumber ?? null)}
-                />
-            </fieldset>
-        </article>
+            <Input.Group>
+                <Input.Label for="price">Price</Input.Label>
+                <NumberInput id="price" value={props.value.price || ""} onChange={setPrice} />
+            </Input.Group>
+        </Card>
     )
 }
