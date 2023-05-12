@@ -1,4 +1,4 @@
-import { type JSXElement, Show } from "solid-js"
+import { type JSXElement, Show, splitProps } from "solid-js"
 
 export type InputProps = {
     type: "text" | "email" | "password" | "textarea"
@@ -11,6 +11,8 @@ export type InputProps = {
 }
 
 function Input(props: InputProps) {
+    const [, others] = splitProps(props, ["value", "onChange"])
+
     const value = () => String(props.value ?? "")
 
     const handleChange = (e: Event & { currentTarget: { value: string } }) => {
@@ -20,9 +22,9 @@ function Input(props: InputProps) {
     return (
         <Show
             when={props.type === "textarea"}
-            fallback={<input {...props} value={value()} onChange={handleChange} />}
+            fallback={<input {...others} value={value()} onInput={handleChange} />}
         >
-            <textarea {...props} value={value()} onChange={handleChange} />
+            <textarea {...others} value={value()} onInput={handleChange} />
         </Show>
     )
 }

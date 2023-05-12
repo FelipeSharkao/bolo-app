@@ -164,7 +164,7 @@ const createItem = (remove: () => void): EditingMenuItemState => {
     }))
 }
 
-const debouncedMenu = debounce(() => pick(editingMenu, "title", "description"), 500)
+const debouncedMenu = debounce(() => pick(editingMenu, "title", "description"), 1500)
 
 // Save the menu to the server
 createEffect(() => {
