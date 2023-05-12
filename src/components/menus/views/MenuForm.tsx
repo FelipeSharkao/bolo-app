@@ -4,6 +4,7 @@ import Input from "@/components/Input"
 
 import { editingMenu } from "../state"
 import MenuEntryFormList from "./MenuEntryFormList"
+import { Base58 } from "@/utils/Base58"
 
 type Props = {
     menuId: string | null
@@ -12,7 +13,7 @@ type Props = {
 export default function MenuForm(props: Props) {
     const [loaded] = createResource(
         () => props.menuId || "",
-        (id) => editingMenu.load(id),
+        (id) => editingMenu.load(id ? Base58.decode(id) : null)
     )
 
     const handleAddEntry = (type: "section" | "item") => {

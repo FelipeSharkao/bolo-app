@@ -1,5 +1,5 @@
 export type Menu = {
-    id: string
+    id: number | null
     title: string
     description: string | null
     sections: MenuSection[]
@@ -9,7 +9,7 @@ export type MenuEntry = MenuSection | MenuItem
 
 export type MenuSection = {
     type: "section"
-    id: string
+    id: number | null
     title: string
     description: string | null
     entries: MenuEntry[]
@@ -19,7 +19,7 @@ export type MenuSection = {
 
 export type MenuItem = {
     type: "item"
-    id: string
+    id: number | null
     title: string
     description: string | null
     price: number

@@ -6,10 +6,10 @@ export const post = route(async ({ body, session }) => {
 
     const menuService = new MenuService(session)
 
-    const menu = await menuService.create(title, description)
+    const id = await menuService.create(title, description)
 
     return {
         status: 201,
-        body: { success: true, menu },
+        body: { success: true, id },
     }
 })

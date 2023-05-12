@@ -23,12 +23,10 @@ export class MenuService {
                 title,
                 description,
             })
-            .select("*")
+            .select("id")
 
         // TODO: handle error
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        const [inserted] = data!
-
-        return inserted
+        return data![0].id
     }
 }

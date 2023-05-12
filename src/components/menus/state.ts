@@ -1,8 +1,12 @@
+import axios from "axios"
+import { pick } from "lodash"
+import { createEffect, untrack } from "solid-js"
 import { state } from "solid-sm"
 import type { Object } from "ts-toolbelt"
 
 import type { Menu, MenuItem, MenuSection } from "@/types/menu"
-import axios from "axios"
+import { Base58 } from "@/utils/Base58"
+import { debounce } from "@/utils/debounce"
 
 export type EditingMenuState = Object.Merge<
     {
@@ -12,7 +16,7 @@ export type EditingMenuState = Object.Merge<
         setDescription(description: string | null): void
         addSection(): EditingMenuSectionState
 
-        load(id: string | null): Promise<void>
+        load(id: number | null): Promise<void>
     },
     Menu
 >
@@ -46,7 +50,7 @@ export type EditingMenuItemState = Object.Merge<
 >
 
 export const editingMenu = state<EditingMenuState>((set) => ({
-    id: "",
+    id: null,
     title: "",
     description: "",
     sections: [],
@@ -70,27 +74,18 @@ export const editingMenu = state<EditingMenuState>((set) => ({
     async load(id) {
         console.log("load", id)
 
-        if (id) {
-            // unimplemented
+        if (!id) {
             return
         }
 
-        // TODO: move API calls to a dedicated file
-        const { data } = await axios.post("/api/menu", {
-            title: this.title,
-            description: this.description,
-        })
-
-        if (data.success) {
-            set("id", data.id)
-        }
+        // unimplemented
     },
 }))
 
 const createSection = (remove: () => void): EditingMenuSectionState => {
     return state((set) => ({
         type: "section",
-        id: "",
+        id: null,
         title: "",
         description: "",
         min: null,
@@ -131,7 +126,7 @@ const createSection = (remove: () => void): EditingMenuSectionState => {
 const createItem = (remove: () => void): EditingMenuItemState => {
     return state((set) => ({
         type: "item",
-        id: "",
+        id: null,
         title: "",
         description: "",
         min: null,
@@ -163,3 +158,39 @@ const createItem = (remove: () => void): EditingMenuItemState => {
         },
     }))
 }
+
+const debouncedMenu = debounce(() => pick(editingMenu, "title", "description"), 500)
+
+// Save the menu to the server
+createEffect(() => {
+    let id = untrack(() => editingMenu.id)
+    const { title, description } = debouncedMenu()
+
+    if (!title) {
+        return
+    }
+
+    // TODO: move API calls to a dedicated file
+    async function save() {
+        console.log("save menu", { title, description })
+
+        if (id) {
+            // unimplemented
+        } else {
+            const { data } = await axios.post("/api/menu", { title, description })
+
+            if (!data.success) {
+                return
+            }
+
+            id = data.id
+        }
+
+        if (location.pathname === "/m/new") {
+            const hash = Base58.encode(Number(id))
+            history.replaceState(history.state, "", `/m/${hash}/edit`)
+        }
+    }
+
+    save()
+})
