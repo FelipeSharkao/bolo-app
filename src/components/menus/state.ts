@@ -1,6 +1,6 @@
 import axios from "axios"
 import { pick } from "lodash"
-import { createEffect, untrack } from "solid-js"
+import { createEffect, createRoot, untrack } from "solid-js"
 import { state } from "solid-sm"
 import type { Object } from "ts-toolbelt"
 
@@ -16,7 +16,7 @@ export type EditingMenuState = Object.Merge<
         setDescription(description: string | null): void
         addSection(): EditingMenuSectionState
 
-        load(id: number | null): Promise<void>
+        load(menu: Pick<Menu, "id" | "title" | "description">): void
     },
     Menu
 >
@@ -49,43 +49,76 @@ export type EditingMenuItemState = Object.Merge<
     MenuItem
 >
 
-export const editingMenu = state<EditingMenuState>((set) => ({
-    id: null,
-    title: "",
-    description: "",
-    sections: [],
+export const editingMenu = createRoot(() => {
+    const menu = state<EditingMenuState>((set) => ({
+        id: null,
+        title: "",
+        description: "",
+        sections: [],
 
-    setTitle(title) {
-        set({ title })
-    },
+        setTitle(title) {
+            set({ title })
+        },
 
-    setDescription(description) {
-        set({ description })
-    },
+        setDescription(description) {
+            set({ description })
+        },
 
-    addSection() {
-        const section = createSection(() =>
-            set("sections", (sections) => sections.filter((s) => s !== section)),
-        )
-        set("sections", (sections) => [...sections, section])
-        return section
-    },
+        addSection() {
+            const section = createSection(() =>
+                set("sections", (sections) => sections.filter((s) => s !== section)),
+            )
+            set("sections", (sections) => [...sections, section])
+            return section
+        },
 
-    async load(id) {
-        console.log("load", id)
+        load(menu) {
+            set(pick(menu, ["id", "title", "description"]))
+        },
+    }))
 
-        if (!id) {
+    const debouncedMenu = debounce(() => pick(menu, "title", "description"), 1500)
+
+    // Save the menu to the server
+    createEffect(() => {
+        let id = untrack(() => menu.id)
+        const { title, description } = debouncedMenu()
+
+        if (!title) {
             return
         }
 
-        const { data } = await axios.get(`/api/menu?id=${id}`)
+        // TODO: move API calls to a dedicated file
+        async function save() {
+            console.log("save menu", { id, title, description })
 
-        if (data.menu) {
-            set(pick(data.menu, ["id", "title", "description"]))
-            // set("sections", data.menu.sections.map((section) => createSection(() => {})))
+            if (id) {
+                const { data } = await axios.patch(`/api/menu?id=${id}`, { title, description })
+
+                if (!data.success) {
+                    return
+                }
+            } else {
+                const { data } = await axios.post("/api/menu", { title, description })
+
+                if (!data.success) {
+                    return
+                }
+
+                id = data.id
+            }
+
+            if (location.pathname === "/m/new") {
+                const hash = Base58.encode(Number(id))
+                history.replaceState(history.state, "", `/m/${hash}/edit`)
+            }
         }
-    },
-}))
+
+        save()
+    })
+
+    return menu
+})
 
 const createSection = (remove: () => void): EditingMenuSectionState => {
     return state((set) => ({
@@ -163,43 +196,3 @@ const createItem = (remove: () => void): EditingMenuItemState => {
         },
     }))
 }
-
-const debouncedMenu = debounce(() => pick(editingMenu, "title", "description"), 1500)
-
-// Save the menu to the server
-createEffect(() => {
-    let id = untrack(() => editingMenu.id)
-    const { title, description } = debouncedMenu()
-
-    if (!title) {
-        return
-    }
-
-    // TODO: move API calls to a dedicated file
-    async function save() {
-        console.log("save menu", { id, title, description })
-
-        if (id) {
-            const { data } = await axios.patch(`/api/menu?id=${id}`, { title, description })
-
-            if (!data.success) {
-                return
-            }
-        } else {
-            const { data } = await axios.post("/api/menu", { title, description })
-
-            if (!data.success) {
-                return
-            }
-
-            id = data.id
-        }
-
-        if (location.pathname === "/m/new") {
-            const hash = Base58.encode(Number(id))
-            history.replaceState(history.state, "", `/m/${hash}/edit`)
-        }
-    }
-
-    save()
-})

@@ -1,6 +1,10 @@
 ---
+import axios from "axios"
+
 import MenuForm from "@/components/menus"
 import App from "@/layouts/App.astro"
+import type { Menu } from "@/types/menu"
+import { Base58 } from "@/utils/Base58"
 import { auth } from "@/utils/auth"
 
 const login = await auth(Astro)
@@ -9,6 +13,22 @@ if (login.redirect) {
 }
 
 const { id } = Astro.params
+
+const accessToken = Astro.cookies.get("access_token")?.value
+const refreshToken = Astro.cookies.get("refresh_token")?.value
+
+const menu = await axios
+.get<{ menu?: Menu }>(`${Astro.url.origin}/api/menu`, {
+    params: { id: id && Base58.decode(id) },
+        headers: { Cookie: `access_token=${accessToken}; refresh_token=${refreshToken}`,
+        },
+    })
+    .then((res) => res.data?.menu)
+    .catch(() => null)
+
+if (!menu) {
+    return Astro.redirect("/")
+}
 ---
 
 <App>
@@ -17,5 +37,5 @@ const { id } = Astro.params
         <h2>Adicione um novo cardápio</h2>
     </hgroup>
 
-    <MenuForm client:load menuId={id} />
+    <MenuForm client:load menu={menu} />
 </App>

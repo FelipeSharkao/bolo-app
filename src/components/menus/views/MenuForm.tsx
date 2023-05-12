@@ -1,20 +1,26 @@
-import { createResource } from "solid-js"
+import { createEffect, untrack } from "solid-js"
 
 import Input from "@/components/Input"
+import type { Menu } from "@/types/menu"
 
 import { editingMenu } from "../state"
 import MenuEntryFormList from "./MenuEntryFormList"
-import { Base58 } from "@/utils/Base58"
 
 type Props = {
-    menuId: string | null
+    menu: Menu | null
 }
 
 export default function MenuForm(props: Props) {
-    const [loaded] = createResource(
-        () => props.menuId || "",
-        (id) => editingMenu.load(id ? Base58.decode(id) : null)
-    )
+    const load = () => {
+        if (props.menu) {
+            editingMenu.load(props.menu)
+        }
+    }
+
+    // Load on SSR and re-load on hydration. This is necessary because I can't get Astro to
+    // hydratate Solid's signals.
+    untrack(load)
+    createEffect(load)
 
     const handleAddEntry = (type: "section" | "item") => {
         if (type === "section") {
@@ -24,7 +30,6 @@ export default function MenuForm(props: Props) {
 
     return (
         <>
-            {loaded()}
             <Input.Group>
                 <Input.Label for="title">Título</Input.Label>
                 <Input

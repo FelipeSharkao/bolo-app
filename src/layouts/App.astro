@@ -1,6 +1,7 @@
 ---
 import axios from "axios"
 
+import type { Menu } from "@/types/menu"
 import { Base58 } from "@/utils/Base58"
 
 import Root from "./Root.astro"
@@ -11,13 +12,12 @@ const accessToken = Astro.cookies.get("access_token")?.value
 const refreshToken = Astro.cookies.get("refresh_token")?.value
 
 const recentMenus = await axios
-    .get<{ menus?: { id: number; title: string }[] }>(`${Astro.url.origin}/api/menus?limit=4`, {
-        headers: {
-            Cookie: `access_token=${accessToken}; refresh_token=${refreshToken}`,
-        },
+    .get<{ menus?: Menu[] }>(`${Astro.url.origin}/api/menus`, {
+        params: { limit: 5 },
+        headers: { Cookie: `access_token=${accessToken}; refresh_token=${refreshToken}` },
     })
     .then((res) => res.data?.menus ?? [])
-    .catch((e) => (console.error(e), []))
+    .catch(() => [])
 ---
 
 <Root>
@@ -29,11 +29,16 @@ const recentMenus = await axios
                     <ul>
                         <li><a href="/m/new">Novo cardápio</a></li>
                         {
-                            recentMenus.slice(0, 3).map((menu) => (
-                                <li>
-                                    <a href={`/m/${Base58.encode(menu.id)}`}>{menu.title}</a>
-                                </li>
-                            ))
+                            recentMenus.slice(0, 3).map(
+                                (menu) =>
+                                    menu.id != null && (
+                                        <li>
+                                            <a href={`/m/${Base58.encode(menu.id)}/edit`}>
+                                                {menu.title}
+                                            </a>
+                                        </li>
+                                    ),
+                            )
                         }
                         {
                             recentMenus.length > 3 && (
