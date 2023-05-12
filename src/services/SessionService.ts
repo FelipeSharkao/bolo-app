@@ -1,6 +1,7 @@
-import { createClient, SupabaseClient, type Session } from "@supabase/supabase-js"
-import type { Database } from "@/types/_generated/supabase"
+import { type Session, type SupabaseClient, createClient } from "@supabase/supabase-js"
 import type { AstroCookies } from "astro"
+
+import type { Database } from "@/types/_generated/supabase"
 
 const SECURE_COOKIE = {
     httpOnly: true,

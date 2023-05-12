@@ -2,6 +2,7 @@ import { state } from "solid-sm"
 import type { Object } from "ts-toolbelt"
 
 import type { Menu, MenuItem, MenuSection } from "@/types/menu"
+import axios from "axios"
 
 export type EditingMenuState = Object.Merge<
     {
@@ -10,6 +11,8 @@ export type EditingMenuState = Object.Merge<
         setTitle(title: string): void
         setDescription(description: string | null): void
         addSection(): EditingMenuSectionState
+
+        load(id: string | null): Promise<void>
     },
     Menu
 >
@@ -62,6 +65,25 @@ export const editingMenu = state<EditingMenuState>((set) => ({
         )
         set("sections", (sections) => [...sections, section])
         return section
+    },
+
+    async load(id) {
+        console.log("load", id)
+
+        if (id) {
+            // unimplemented
+            return
+        }
+
+        // TODO: move API calls to a dedicated file
+        const { data } = await axios.post("/api/menu", {
+            title: this.title,
+            description: this.description,
+        })
+
+        if (data.success) {
+            set("id", data.id)
+        }
     },
 }))
 

@@ -1,13 +1,20 @@
+import { createResource } from "solid-js"
+
 import Input from "@/components/Input"
 
 import { editingMenu } from "../state"
 import MenuEntryFormList from "./MenuEntryFormList"
 
 type Props = {
-    menuId?: string
+    menuId: string | null
 }
 
 export default function MenuForm(props: Props) {
+    const [loaded] = createResource(
+        () => props.menuId || "",
+        (id) => editingMenu.load(id),
+    )
+
     const handleAddEntry = (type: "section" | "item") => {
         if (type === "section") {
             editingMenu.addSection()
@@ -16,6 +23,7 @@ export default function MenuForm(props: Props) {
 
     return (
         <>
+            {loaded()}
             <Input.Group>
                 <Input.Label for="title">Título</Input.Label>
                 <Input

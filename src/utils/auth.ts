@@ -1,5 +1,6 @@
-import { SessionService } from "@/services/SessionService"
 import type { AstroGlobal } from "astro"
+
+import { SessionService } from "@/services/SessionService"
 
 export async function auth(astro: AstroGlobal) {
     const session = await SessionService.fromCookies(astro.cookies)

@@ -1,12 +1,14 @@
 import type { APIRoute, AstroCookies, Params } from "astro"
+
 import { SessionService } from "@/services/SessionService"
+import { NetworkError } from "@/utils/errors"
 
 type RouteFn = {
     (handler: (request: RouteInput) => Promise<RouteOutput>): APIRoute
     auth: (handler: (request: RouteInput) => Promise<RouteOutput>) => APIRoute
 }
 
-type RouteInput = {
+export type RouteInput = {
     body: unknown
     session: SessionService
     headers: Headers
@@ -16,11 +18,11 @@ type RouteInput = {
     request: Request
 }
 
-type RouteOutput =
+export type RouteOutput =
     | {
           status?: number
           headers?: Record<string, string>
-          body?: unknown
+          body?: { success: boolean; [key: string]: unknown }
       }
     | {
           redirect: string
@@ -45,6 +47,28 @@ export const route: RouteFn = (handler) => {
             params,
             cookies,
             request,
+        }).catch((error): RouteOutput => {
+            if (error instanceof NetworkError) {
+                return error.toOutput()
+            }
+
+            console.error(error)
+
+            const output = {
+                status: 500,
+                body: {
+                    success: false,
+                    error: "An internal server error occurred.",
+                    stack: undefined as string | undefined,
+                },
+            }
+
+            if (import.meta.env.DEV) {
+                output.body.error = error instanceof Error ? error.message : String(error)
+                output.body.stack = error instanceof Error ? error.stack : undefined
+            }
+
+            return output
         })
 
         if ("redirect" in response) {
