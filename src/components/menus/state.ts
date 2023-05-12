@@ -78,7 +78,13 @@ export const editingMenu = state<EditingMenuState>((set) => ({
             return
         }
 
-        // unimplemented
+        const { data } = await axios.get(`/api/menu?id=${id}`)
+
+        if (data.menu) {
+            set(pick(data.menu, ["id", "title", "description"]))
+            // set("sections", data.menu.sections.map((section) => createSection(() => {})))
+        }
+    },
     },
 }))
 

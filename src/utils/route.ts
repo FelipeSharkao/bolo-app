@@ -10,6 +10,7 @@ type RouteFn = {
 
 export type RouteInput = {
     body: unknown
+    query: Record<string, string | undefined>
     session: SessionService
     headers: Headers
     method: string
@@ -44,6 +45,7 @@ export const route: RouteFn = (handler) => {
             session,
             headers: request.headers,
             method: request.method,
+            query: Object.fromEntries(new URLSearchParams(new URL(request.url).search).entries()),
             params,
             cookies,
             request,
