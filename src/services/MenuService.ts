@@ -2,6 +2,11 @@ import { AuthenticationError } from "@/utils/errors"
 
 import type { SessionService } from "./SessionService"
 
+type MenuUpdate = {
+    title?: string
+    description?: string
+}
+
 export class MenuService {
     constructor(private session: SessionService) {}
 
@@ -34,10 +39,29 @@ export class MenuService {
 
         console.log("create menu", menu)
 
-        const { data } = await this.session.client.from("menus").insert(menu).select("id")
+        const { data } = await this.session.client.from("menus").insert(menu).select("id").single()
 
         // TODO: handle error
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        return data![0].id
+        return data!.id
+    }
+
+    async update(id: number, update: MenuUpdate) {
+        if (!this.session.current) {
+            throw new AuthenticationError()
+        }
+
+        console.log("update menu", id, update)
+
+        const { data } = await this.session.client
+            .from("menus")
+            .update(update)
+            .eq("id", id)
+            .select("id")
+            .single()
+
+        // TODO: handle error
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        return data?.id
     }
 }

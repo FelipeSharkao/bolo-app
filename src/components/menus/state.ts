@@ -85,7 +85,6 @@ export const editingMenu = state<EditingMenuState>((set) => ({
             // set("sections", data.menu.sections.map((section) => createSection(() => {})))
         }
     },
-    },
 }))
 
 const createSection = (remove: () => void): EditingMenuSectionState => {
@@ -178,10 +177,14 @@ createEffect(() => {
 
     // TODO: move API calls to a dedicated file
     async function save() {
-        console.log("save menu", { title, description })
+        console.log("save menu", { id, title, description })
 
         if (id) {
-            // unimplemented
+            const { data } = await axios.patch(`/api/menu?id=${id}`, { title, description })
+
+            if (!data.success) {
+                return
+            }
         } else {
             const { data } = await axios.post("/api/menu", { title, description })
 
