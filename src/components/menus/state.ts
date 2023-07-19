@@ -1,5 +1,5 @@
 import axios from "axios"
-import { pick } from "lodash"
+import pick from "lodash-es/pick"
 import { createEffect, createRoot, untrack } from "solid-js"
 import { state } from "solid-sm"
 import type { Object } from "ts-toolbelt"
