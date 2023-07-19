@@ -46,7 +46,9 @@ export class SessionService {
      * @returns The session service.
      */
     static async fromCookies(cookies: AstroCookies) {
-        const client = createClient(supabaseUrl, supabaseAnonKey)
+        const client = createClient(supabaseUrl, supabaseAnonKey, {
+            auth: { persistSession: false },
+        })
 
         const accessToken = cookies.get("access_token").value
         const refreshToken = cookies.get("refresh_token").value
